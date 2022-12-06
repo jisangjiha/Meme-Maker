@@ -3,6 +3,9 @@ const ctx = canvas.getContext("2d");
 
 const lineWidth = document.getElementById("line-width");
 const color = document.getElementById("color");
+const colorOptions = Array.from(
+  document.getElementsByClassName("color-option")
+);
 const modeBtn = document.getElementById("mode-btn");
 const destroyBtn = document.getElementById("destroy-btn");
 const eraserBtn = document.getElementById("eraser-btn");
@@ -35,6 +38,7 @@ function startPainting() {
 }
 function cancelPainting() {
   isPainting = false;
+  ctx.beginPath();
 }
 function onLineWidthChange(event) {
   ctx.lineWidth = event.target.value;
@@ -43,13 +47,19 @@ function onColorChange(event) {
   ctx.strokeStyle = event.target.value;
   ctx.fillStyle = event.target.value;
 }
+function onColorClick(event) {
+  const colorValue = event.target.dataset.color;
+  ctx.strokeStyle = colorValue;
+  ctx.fillStyle = colorValue;
+  color.value = colorValue;
+}
 function onModeClick() {
   if (isFilling) {
     isFilling = false;
-    modeBtn.innerText = "Fill";
+    modeBtn.innerText = "🧚‍♂️ Fill";
   } else {
     isFilling = true;
-    modeBtn.innerText = "Draw";
+    modeBtn.innerText = "🖍️ Draw";
   }
 }
 function onCanvasClick() {
@@ -64,7 +74,7 @@ function onDestroyClick() {
 function onEraserClcick() {
   ctx.strokeStyle = "white";
   isFilling = false;
-  modeBtn.innerText = "Fill";
+  modeBtn.innerText = "🧚‍♂️ Fill";
 }
 function onFileChange(event) {
   const file = event.target.files[0];
@@ -103,6 +113,8 @@ canvas.addEventListener("dblclick", onDoubleClick);
 
 lineWidth.addEventListener("change", onLineWidthChange);
 color.addEventListener("change", onColorChange);
+colorOptions.forEach((color) => color.addEventListener("click", onColorClick));
+
 modeBtn.addEventListener("click", onModeClick);
 destroyBtn.addEventListener("click", onDestroyClick);
 eraserBtn.addEventListener("click", onEraserClcick);
